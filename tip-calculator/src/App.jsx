@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [bill, setBill] = useState(0);
+  const [bill, setBill] = useState(null);
   const [tip, setTip] = useState("0");
   const [friendTip, setFriendTip] = useState("0");
   const finalTip =
@@ -18,7 +18,7 @@ function App() {
         setTip={setTip}
         setFriendTip={setFriendTip}
       />
-      {bill !== 0 ? <p>Tip is calculated here: {finalTip}</p> : null}
+      {bill !== null ? <Tip bill={bill} tip={finalTip} /> : null}
       <Reset setBill={setBill} setTip={setTip} setFriendTip={setFriendTip} />
     </div>
   );
@@ -59,6 +59,17 @@ function Question({ question, children }) {
     <div>
       <span>{question}</span>
       {children}
+    </div>
+  );
+}
+
+function Tip({ bill, tip }) {
+  const totalBill= Number(bill)+tip;
+  return (
+    <div>
+      <p>
+        You pay : ${totalBill} (${bill} + ${tip})
+      </p>
     </div>
   );
 }
