@@ -1,52 +1,47 @@
+// `https://api.frankfurter.app/latest?amount=100&from=EUR&to=USD`
+
 import { useEffect, useState } from "react";
 
 export default function App() {
   const [from, setFrom] = useState("USD");
   const [to, setTo] = useState("EUR");
-  const [currency, setCurrency] = useState(0);
-  const [converted, setConverted] = useState();
-  function handleFrom(e) {
-    setFrom(e.target.value);
-  }
-  function handleTo(e) {
-    setTo(e.target.value);
-  }
-  function handleCurrencyChange(e) {
-    setCurrency(e.target.value);
-    console.log(currency)
-  }
+  const [amount, setAmount] = useState(1);
+  const [convertedAmount, setConvertedAmount] = useState(0);
   useEffect(
     function () {
-      async function fetchData() {
-        const res = await fetch(
-          `https://api.frankfurter.app/latest?amount=${currency}&from=${from}&to=${to}`
+      async function fetchdata() {
+        const converted = await fetch(
+          `https://api.frankfurter.app/latest?amount=${amount}&from=${from}&to=${to}`
         );
-        const data = await res.json();
-        console.log(data);
-        setConverted(data?.rates[to]);
+        const res = await converted.json();
+        setConvertedAmount(res?.rates[to]);
       }
-      fetchData();
+      if (from !== to) {
+        fetchdata();
+      }
     },
-    [from, to, currency]
+    [amount, from, to]
   );
-
   return (
     <div>
-      <input type="text" value={currency} onChange={handleCurrencyChange} />
-      <select value={from} onChange={handleFrom}>
+      <input
+        value={amount}
+        type="text"
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <select value={from} onChange={(e) => setFrom(e.target.value)}>
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
         <option value="INR">INR</option>
       </select>
-      <select value={to} onChange={handleTo}>
+      <select value={to} onChange={(e) => setTo(e.target.value)}>
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
         <option value="INR">INR</option>
       </select>
-      <p>OUTPUT</p>
-      {converted}
+      <p>OUTPUT : {convertedAmount}</p>
     </div>
   );
 }
